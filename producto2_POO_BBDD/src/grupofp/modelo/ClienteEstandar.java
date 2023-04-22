@@ -4,9 +4,16 @@ package grupofp.modelo;
  *
  */
 public class ClienteEstandar extends Cliente {
-
-    public ClienteEstandar(String email, String nombre, String domicilio, String nif) {
+	
+	private float cuotaAnual;
+	private float dtoGtoEnvio;
+	private String tipoCliente;
+	
+    public ClienteEstandar(String email, String nombre, String domicilio, String nif, String tipoCliente, float cuotaAnual, float dtoGtoEnvio) {
         super(email, nombre, domicilio, nif); 
+        this.cuotaAnual = cuotaAnual;
+        this.descuentoEnvio = descuedtoGtoEnviontoEnvio;
+        this.tipoCliente = tipoCliente;
     }
     
 
@@ -18,16 +25,16 @@ public class ClienteEstandar extends Cliente {
 
 	@Override
 	public String tipoCliente() {
-		return "Estándar";
+		return this.tipoCliente;
 	}
 
 	@Override
 	public float calcAnual() {
-		return 0;
+		return this.cuotaAnual;
 	}
 
 	@Override
 	public float descuentoEnv() {
-		return 0;
+		return this.dtoGtoEnvio;
 	}
 }

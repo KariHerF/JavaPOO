@@ -5,8 +5,10 @@ package grupofp.modelo;
  */
 public class ClientePremium extends Cliente {
 	//Constantes para guardar la cuota anual y el descuento de gastos de envío de un cliente premium
-	private final float cuotaAnual = 30f;
-	private final float dtoGtoEnvio = 0.2f;
+	private float cuotaAnual;
+	private float dtoGtoEnvio;
+	private String tipoCliente;
+	
 
 	/**
 	 * @param email
@@ -14,8 +16,11 @@ public class ClientePremium extends Cliente {
 	 * @param domicilio
 	 * @param nif
 	 */
-	public ClientePremium(String email, String nombre, String domicilio, String nif) {
+	public ClientePremium(String email, String nombre, String domicilio, String nif, String tipoCliente, float cuotaAnual, float dtoGtoEnvio) {
 		super(email, nombre, domicilio, nif);
+		this.cuotaAnual = cuotaAnual;
+        this.dtoGtoEnvio = dtoGtoEnvio;
+        this.tipoCliente = tipoCliente;
 	}
 
 	/**
@@ -30,16 +35,16 @@ public class ClientePremium extends Cliente {
 
 	@Override
 	public String tipoCliente() {
-		return "Premium";
+		return this.tipoCliente;
 	}
 
 	@Override
 	public float calcAnual() {
-		return 30f;
+		return this.cuotaAnual;
 	}
 
 	@Override
 	public float descuentoEnv() {
-		return 0.2f;
+		return this.descuentoEnv();
 	}
 }

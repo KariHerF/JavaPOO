@@ -1,5 +1,7 @@
 package grupofp.excepciones;
 
+import java.sql.SQLException;
+
 public class ExcepcionesPersonalizadas {
 
 	public static class InvalidDNIorNIEFormatException extends Exception {
@@ -31,5 +33,11 @@ public class ExcepcionesPersonalizadas {
 	        super(message);
 	    }
     }	
+	
+	public static class DAOException extends Exception {
+		public DAOException(String message, SQLException e) {
+	        super(message + e.toString());
+	    }
+    }
 
 }
