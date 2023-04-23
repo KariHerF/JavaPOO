@@ -9,7 +9,7 @@ import grupofp.modelo.Datos;
 import grupofp.vista.GestionOS;
 
 /**
- * @author J-Programers
+ * @author kahef
  *
  */
 public class Main {

@@ -13,13 +13,16 @@ public abstract class DAOFactory {
 	  public abstract ClienteDAO obtenerClienteDAO() throws SQLException;
 	  public abstract PedidoDAO obtenerPedidoDAO() throws SQLException;
 
-	  public static DAOFactory getDAOFactory(
-	      int whichFactory) {
+	  // Indicamos por parámetro el tipo de sgdb que vamos a utilizar
+	  // En nuestro caso la configuración de la conexión a nuestro
+	  // servidor con mySQL montado en Azure, se encuentra en la clase 
+	  // MySQLDAOFactory
+	  public static DAOFactory getDAOFactory(int whichFactory) {
 
 	    switch (whichFactory) {
 	      case MYSQL:
 	          return new MySQLDAOFactory();
-	      default           :
+	      default:
 	          return null;
 	    }
 	  }

@@ -37,15 +37,14 @@ public class PedidoDAOImpl implements PedidoDAO {
     public void insertarPedido(Pedido pedido) throws SQLException, DAOException {
         PreparedStatement statement = null;
         try {
-            String query = "INSERT INTO pedidos (num_pedido, codigo_articulo, cantidad, fecha_pedido, enviado, email) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO pedidos (codigo_articulo, cantidad, fecha_pedido, email) " +
+                    "VALUES (?, ?, ?, ?)";
             statement = conn.prepareStatement(query);
-            statement.setInt(1, pedido.getNumPedido());
-            statement.setString(2, pedido.getArticulo().getCodigo());
-            statement.setInt(3, pedido.getCantUnidades());
-            statement.setObject(4, pedido.getFechaHora());
-            statement.setBoolean(5, pedido.pedidoEnviado());
-            statement.setString(6, pedido.getCliente().getEmail());
+            //statement.setInt(1, pedido.getNumPedido());
+            statement.setString(1, pedido.getArticulo().getCodigo());
+            statement.setInt(2, pedido.getCantUnidades());
+            statement.setObject(3, pedido.getFechaHora());
+            statement.setString(4, pedido.getCliente().getEmail());
             statement.executeUpdate();
         } catch (SQLException e) {
 			throw new DAOException("Error al insertar el nuevo pedido en la bd: ", e);
@@ -109,7 +108,8 @@ public class PedidoDAOImpl implements PedidoDAO {
                     String codigo_articulo = rs.getString("codigo_articulo");
                     Articulo articulo = articuloDAO.obtenerArticulo(codigo_articulo);
 
-                    pedido = new Pedido(numPedido, cliente, articulo, fechaHora, cantUnidades);
+                    pedido = new Pedido(cliente, articulo, fechaHora, cantUnidades);
+                    pedido.setNumPedido(numPedido);
                 }
             }  catch (SQLException e) {
     			throw new DAOException("Error al intentar obtener el pedido de la bd: ", e);
@@ -150,7 +150,8 @@ public class PedidoDAOImpl implements PedidoDAO {
                     String codigo_articulo = rs.getString("codigo_articulo");
                     Articulo articulo = articuloDAO.obtenerArticulo(codigo_articulo);
 
-                    Pedido pedido = new Pedido(numPedido, cliente, articulo, fechaHora, cantUnidades);
+                    Pedido pedido = new Pedido(cliente, articulo, fechaHora, cantUnidades);
+                    pedido.setNumPedido(numPedido);
                     pedidos.add(pedido);
                 }
             } finally {
@@ -193,7 +194,8 @@ public class PedidoDAOImpl implements PedidoDAO {
                     String codigo_articulo = rs.getString("codigo_articulo");
                     Articulo articulo = articuloDAO.obtenerArticulo(codigo_articulo);
 
-                    Pedido pedido = new Pedido(numPedido, cliente, articulo, fechaHora, cantUnidades);
+                    Pedido pedido = new Pedido(cliente, articulo, fechaHora, cantUnidades);
+                    pedido.setNumPedido(numPedido);
                     pedidos.add(pedido);
                 }
             } finally {

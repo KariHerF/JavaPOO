@@ -15,17 +15,16 @@ public class Pedido {
 	private int cantUnidades;
 	private boolean enviado = false;
 
+	private static final String CLIENTE_PREMIUM = "premium";
 
 	/**
-	 * @param numPedido
 	 * @param cliente
 	 * @param articulo
 	 * @param fechaHora
 	 * @param cantUnidades
 	 * @param enviado
 	 */
-	public Pedido(int numPedido, Cliente cliente, Articulo articulo, LocalDateTime fechaHora, int cantUnidades) {
-		this.numPedido = numPedido;
+	public Pedido(Cliente cliente, Articulo articulo, LocalDateTime fechaHora, int cantUnidades) {
 		this.cliente = cliente;
 		this.articulo = articulo;
 		this.fechaHora = fechaHora;
@@ -131,7 +130,7 @@ public class Pedido {
 
 
 	public float precioEnvio() {
-		if (this.cliente.tipoCliente() == "Premium") {
+		if (this.cliente.tipoCliente().equals(CLIENTE_PREMIUM)) {
 			return this.articulo.getGastosEnvio() * this.cantUnidades * (1- this.cliente.descuentoEnv());
 		}
 		return this.articulo.getGastosEnvio()*this.cantUnidades;

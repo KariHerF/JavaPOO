@@ -17,7 +17,7 @@ import grupofp.modelo.Pedido;
 import grupofp.vista.GestionOS;
 
 /**
- * @author J-Programers
+ * @author kahef
  *
  */
 public class Controlador {
@@ -26,23 +26,28 @@ public class Controlador {
 	private Datos datos;
 
 	/**
-	 * @param vista
-	 * @param modelo
+	 * @param vGestionOS (vista)
+	 * @param datos      (modelo)
 	 */
 	public Controlador(GestionOS vGestionOS, Datos datos) {
 		this.vGestionOS = vGestionOS;
 		this.datos = datos;
 	}
 
-	public void crearArticulo(String codigo_articulo, String descripcion_articulo, float pvp_articulo, Duration tiempoPrep_articulo_parsed, float gastosEnvioArticulo) {
-		datos.crearArticulo(codigo_articulo, descripcion_articulo, pvp_articulo, tiempoPrep_articulo_parsed, gastosEnvioArticulo);
+	// Metodos utiles para manejar articulos
+	public void crearArticulo(String codigo_articulo, String descripcion_articulo, float pvp_articulo,
+			Duration tiempoPrep_articulo_parsed, float gastosEnvioArticulo) {
+		datos.crearArticulo(codigo_articulo, descripcion_articulo, pvp_articulo, tiempoPrep_articulo_parsed,
+				gastosEnvioArticulo);
 	}
 
 	public ListaArticulos getListaArticulos() throws SQLException, DAOException {
 		return datos.getListaArticulos();
 	}
 
-	public void crearCliente(String email_cliente, String nombre_cliente, String domicilio_cliente, String nif_cliente, String sn_tipo_cliente) {
+	// Metodos utiles para manejar clientes
+	public void crearCliente(String email_cliente, String nombre_cliente, String domicilio_cliente, String nif_cliente,
+			String sn_tipo_cliente) {
 		datos.crearCliente(email_cliente, nombre_cliente, domicilio_cliente, nif_cliente, sn_tipo_cliente);
 	}
 
@@ -55,9 +60,9 @@ public class Controlador {
 		Lista<ClienteEstandar> listaClientesEstandar = new Lista<>();
 
 		for (Cliente cliente : datos.getListaClientes()) {
-			  if (cliente instanceof ClienteEstandar) {
-				  listaClientesEstandar.add((ClienteEstandar) cliente);
-			  }
+			if (cliente instanceof ClienteEstandar) {
+				listaClientesEstandar.add((ClienteEstandar) cliente);
+			}
 		}
 		return listaClientesEstandar;
 	}
@@ -67,15 +72,17 @@ public class Controlador {
 		Lista<ClientePremium> listaClientesPremium = new Lista<>();
 
 		for (Cliente cliente : datos.getListaClientes()) {
-			  if (cliente instanceof ClientePremium) {
-				  listaClientesPremium.add((ClientePremium) cliente);
-			  }
+			if (cliente instanceof ClientePremium) {
+				listaClientesPremium.add((ClientePremium) cliente);
+			}
 		}
 		return listaClientesPremium;
 	}
 
-	public void crearPedido(int numPedido, String email_cliente, String codigo_articulo, LocalDateTime fechaHora, int cantUnidades) throws SQLException, DAOException {
-		datos.crearPedido(numPedido, email_cliente, codigo_articulo, fechaHora, cantUnidades);
+	// Metodos utiles para manejar pedidos
+	public void crearPedido(String email_cliente, String codigo_articulo, LocalDateTime fechaHora, int cantUnidades)
+			throws SQLException, DAOException {
+		datos.crearPedido(email_cliente, codigo_articulo, fechaHora, cantUnidades);
 	}
 
 	public ListaPedidos getListaPedidos() throws SQLException, DAOException {
@@ -87,9 +94,9 @@ public class Controlador {
 		ListaPedidos listaPedidosPendientes = new ListaPedidos();
 
 		for (Pedido pedido : this.datos.getListaPedidos()) {
-			  if (!pedido.pedidoEnviado()) {
-				  listaPedidosPendientes.add(pedido);
-			  }
+			if (!pedido.pedidoEnviado()) {
+				listaPedidosPendientes.add(pedido);
+			}
 		}
 		return listaPedidosPendientes;
 	}
@@ -99,9 +106,9 @@ public class Controlador {
 		ListaPedidos listaPedidosPendientesCliente = new ListaPedidos();
 
 		for (Pedido pedido : this.datos.getListaPedidos()) {
-			  if (!pedido.pedidoEnviado() && pedido.getCliente().getEmail().equals(email_cliente)) {
-				  listaPedidosPendientesCliente.add(pedido);
-			  }
+			if (!pedido.pedidoEnviado() && pedido.getCliente().getEmail().equals(email_cliente)) {
+				listaPedidosPendientesCliente.add(pedido);
+			}
 		}
 		return listaPedidosPendientesCliente;
 	}
@@ -111,9 +118,9 @@ public class Controlador {
 		ListaPedidos listaPedidosPendientes = new ListaPedidos();
 
 		for (Pedido pedido : this.datos.getListaPedidos()) {
-			  if (pedido.pedidoEnviado()) {
-				  listaPedidosPendientes.add(pedido);
-			  }
+			if (pedido.pedidoEnviado()) {
+				listaPedidosPendientes.add(pedido);
+			}
 		}
 		return listaPedidosPendientes;
 	}
@@ -123,9 +130,9 @@ public class Controlador {
 		ListaPedidos listaPedidosPendientesCliente = new ListaPedidos();
 
 		for (Pedido pedido : this.datos.getListaPedidos()) {
-			  if (pedido.pedidoEnviado() && pedido.getCliente().getEmail().equals(email_cliente)) {
-				  listaPedidosPendientesCliente.add(pedido);
-			  }
+			if (pedido.pedidoEnviado() && pedido.getCliente().getEmail().equals(email_cliente)) {
+				listaPedidosPendientesCliente.add(pedido);
+			}
 		}
 		return listaPedidosPendientesCliente;
 	}
@@ -134,9 +141,9 @@ public class Controlador {
 		datos.eliminarPedido(numPedido);
 	}
 
-	//Getters y setters para actuar sobre todas las clases del modelo
+	// Getters y setters para actuar sobre todas las clases del modelo
 
-	//Para articulo:
+	// Para articulo:
 	public void setCodigoArticulo(String codigo) {
 		this.datos.setCodigoArticulo(codigo);
 	}
@@ -177,10 +184,11 @@ public class Controlador {
 		return this.datos.getTiempoPrepArticulo();
 	}
 
-	//Para cliente:
+	// Para cliente:
 	public void setNombreCliente(String nombre) {
 		this.datos.setNombreCliente(nombre);
 	}
+
 	public String getNombreCliente() {
 		return this.datos.getNombreCliente();
 	}
@@ -188,6 +196,7 @@ public class Controlador {
 	public void setDomicilioCliente(String domicilio) {
 		this.datos.setDomicilioCliente(domicilio);
 	}
+
 	public String getDomicilioCliente() {
 		return this.datos.getDomicilioCliente();
 	}
@@ -195,6 +204,7 @@ public class Controlador {
 	public void setNifCliente(String nif) {
 		this.datos.setNifCliente(nif);
 	}
+
 	public String getNifCliente() {
 		return this.datos.getNifCliente();
 	}
@@ -202,11 +212,12 @@ public class Controlador {
 	public void setEmailCliente(String email) {
 		this.datos.setEmailCliente(email);
 	}
+
 	public String getEmailCliente() {
 		return this.datos.getEmailCliente();
 	}
 
-	//Para Pedido:
+	// Para Pedido:
 	public void setNumPedidoPedido(int numPedido) {
 		this.datos.setNumPedido(numPedido);
 	}
@@ -232,49 +243,31 @@ public class Controlador {
 	}
 
 	/**
-	 * @return the vGestionOS
+	 * @return vGestionOS (vista)
 	 */
 	public GestionOS getvGestionOS() {
 		return vGestionOS;
 	}
 
 	/**
-	 * @param vGestionOS the vGestionOS to set
+	 * @param vGestionOS (vista)
 	 */
 	public void setvGestionOS(GestionOS vGestionOS) {
 		this.vGestionOS = vGestionOS;
 	}
 
 	/**
-	 * @return the datos
+	 * @return the datos (modelo)
 	 */
 	public Datos getDatos() {
 		return datos;
 	}
 
 	/**
-	 * @param datos the datos to set
+	 * @param datos (modelo)
 	 */
 	public void setDatos(Datos datos) {
 		this.datos = datos;
 	}
-
-
-
-	//para la vista
-
-
-	// Pasa el modelo a la vista para presentar los datos
-//	public void actualizarVistaArticulos() {
-//		vGestionOS.printArticuloDetalles(datos.getCodigoArticulo(), datos.getDescripcionArticulo(), datos.getPvpArticulo(), datos.getGastosEnvioArticulo(), datos.getTiempoPrepArticulo());
-//	}
-//
-//	public void actualizarVistaClientes() {
-//		vGestionOS.printClienteDetalles(datos.getNombreCliente(), datos.getDomicilioCliente(), datos.getNifCliente(), datos.getEmailCliente(), datos.getTipoCliente(), datos.getCalcAnualCliente(), datos.getDescuentoEnvCliente());
-//	}
-//
-//	public void actualizarVistaPedidos() {
-//		vGestionOS.printPedidoDetalles(datos.getNumPedido(), datos.getClientePedido(), datos.getArticuloPedido(), datos.getCantUnidadesPedido(), datos.getFechaHoraPedido(), datos.getPedidoEnviado(), datos.getPrecioEnvioPedido());
-//	}
-
+	
 }

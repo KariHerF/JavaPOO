@@ -45,6 +45,6 @@ public class ClientePremium extends Cliente {
 
 	@Override
 	public float descuentoEnv() {
-		return this.descuentoEnv();
+		return this.dtoGtoEnvio;
 	}
 }

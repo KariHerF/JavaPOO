@@ -296,25 +296,27 @@ public class Datos {
 		}
 	}
 
-	public void crearPedido(int numPedido, String email_cliente, String codigo_articulo, LocalDateTime fechaHora,
+	public void crearPedido(String email_cliente, String codigo_articulo, LocalDateTime fechaHora,
 			int cantUnidades) throws SQLException, DAOException {
 
-
-		if (this.getArticuloDeListaArticulos(codigo_articulo) == null) {
+		Articulo articulo = this.getArticuloDeListaArticulos(codigo_articulo);
+		Cliente cliente = this.getClienteDeListaClientes(email_cliente);
+		
+		if (articulo == null) {
 			// TODO:Lanzar una posible excepción personalizada
 			System.out.println(
 					"Se está intentando generar un pedido con un código de artículo no registrado, "
 					+ "debe de introducir código de artículo que se corresponda con un artículo previamente resgistrado.\n Para registrar un nuevo artículo navege hasta el menú \"GESTION DE ARTICULOS\". ");
-		} else if (this.getClienteDeListaClientes(email_cliente) == null) {
+		} else if (cliente == null) {
 			System.out
 					.println("Se está intentando generar un pedido con un email de cliente no registrado, por favor, para proceder al registro introduzca:");
 			this.miControlador.getvGestionOS().anadirClienteVistaGestionOS();
-			this.crearPedido(numPedido, email_cliente, codigo_articulo, fechaHora, cantUnidades);
+			this.crearPedido(email_cliente, codigo_articulo, fechaHora, cantUnidades);
 		} else {
 
 			try {
 				// Instanciamos el pedido
-				this.pedido = new Pedido(numPedido, this.getClienteDeListaClientes(email_cliente), this.getArticuloDeListaArticulos(codigo_articulo), fechaHora, cantUnidades);
+				this.pedido = new Pedido(cliente, articulo, fechaHora, cantUnidades);
 
 				// Instanciamos nuestra factoria de DAOS
 				MySQLDAOFactory mySQLFactory = new MySQLDAOFactory();

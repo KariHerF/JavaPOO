@@ -5,11 +5,13 @@ package grupofp.junit;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.SQLException;
 import java.time.Duration;
 
 import org.junit.Test;
 
 import grupofp.controlador.Controlador;
+import grupofp.excepciones.ExcepcionesPersonalizadas.DAOException;
 import grupofp.modelo.Datos;
 import grupofp.vista.GestionOS;
 
@@ -25,7 +27,7 @@ public class OnlineStoreTest {
 
 
 	@Test
-	public void testAnadirArticulosMostrarArticulos() {
+	public void testAnadirArticulosMostrarArticulos() throws SQLException, DAOException {
 
 		miVistaGestionOS = new GestionOS();
 		misDatos = new Datos();
@@ -65,7 +67,7 @@ public class OnlineStoreTest {
 	}
 
 	@Test
-	public void testClientesMostrarClientes() {
+	public void testClientesMostrarClientes() throws SQLException, DAOException {
 
 		miVistaGestionOS = new GestionOS();
 		misDatos = new Datos();
