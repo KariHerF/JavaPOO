@@ -8,7 +8,7 @@ public class ClientePremium extends Cliente {
 	private float cuotaAnual;
 	private float dtoGtoEnvio;
 	private String tipoCliente;
-	
+
 
 	/**
 	 * @param email

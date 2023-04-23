@@ -8,97 +8,110 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import grupofp.excepciones.ExcepcionesPersonalizadas.DAOException;
 import grupofp.modelo.Articulo;
+import grupofp.modelo.ListaArticulos;
+import grupofp.modelo.Pedido;
 
 public class ArticuloDAOImpl implements ArticuloDAO {
 
-	private Connection conexion;
+	private Connection conn;
 
-    public ArticuloDAOImpl(Connection conexion) {
-        this.conexion = conexion;
+    public ArticuloDAOImpl(Connection conn) {
+        this.conn = conn;
+    }
+    
+    // Método que se encarga de cerrar la conexión con la base de datos
+    public void close() throws SQLException {
+        if (this.conn != null) {
+            this.conn.close();
+        }
     }
 
+
     @Override
-    public void agregarArticulo(Articulo articulo) throws SQLException {
-        String sql = "INSERT INTO articulos (codigo, descripcion, pvp, tiempo_prep, gastos_envio) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = conexion.prepareStatement(sql)) {
+    public void insertarArticulo(Articulo articulo) throws SQLException, DAOException {
+    	        
+    	 PreparedStatement statement = null;
+    	 
+         try {
+         	String sql = "INSERT INTO articulos (codigo_articulo, descripcion, precio_venta, gastos_envio, tiempo_preparacion)"
+         			+ " VALUES (?, ?, ?, ?, ?)";
+         	statement = conn.prepareStatement(sql);
             statement.setString(1, articulo.getCodigo());
             statement.setString(2, articulo.getDescripcion());
             statement.setFloat(3, articulo.getPvp());
-            statement.setLong(4, articulo.getTiempoPrep().getSeconds());
-            statement.setFloat(5, articulo.getGastosEnvio());
+            statement.setFloat(4, articulo.getGastosEnvio());
+            statement.setLong(5, articulo.getTiempoPrep().getSeconds());
             statement.executeUpdate();
-        }
+        }catch (SQLException e) {
+			throw new DAOException("Error al insertar un nuevo articulo sobre la bd: ", e);
+		} finally {
+			if (statement != null) {
+				// Liberamos los recursos asignados al statement y a la conexión jdbc
+				statement.close();
+				this.close();
+			}
+		}
     }
 
     @Override
-    public Articulo obtenerArticulo(String codigo) throws SQLException {
-        Articulo articulo = null;
-        String sql = "SELECT codigo, descripcion, pvp, tiempo_prep, gastos_envio FROM articulos WHERE codigo=?";
-        try (PreparedStatement statement = conexion.prepareStatement(sql)) {
-            statement.setString(1, codigo);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    articulo = new Articulo(resultSet.getString("codigo"), resultSet.getString("descripcion"),
-                            resultSet.getFloat("pvp"), Duration.ofSeconds(resultSet.getLong("tiempo_prep")),
-                            resultSet.getFloat("gastos_envio"));
-                }
-            }
-        }
+    public Articulo obtenerArticulo(String codigo) throws SQLException, DAOException {
+      	 Articulo articulo = null;
+    	 PreparedStatement statement = null;
+    	 
+         try {
+        	 String sql = "SELECT codigo_articulo, descripcion, precio_venta, gastos_envio, tiempo_preparacion "
+        			+ " FROM articulos WHERE codigo_articulo = ?";
+        	 statement = conn.prepareStatement(sql);
+        	 statement.setString(1, codigo);
+  
+             try (ResultSet resultSet = statement.executeQuery()) {
+                 if (resultSet.next()) {
+                     articulo = new Articulo(resultSet.getString("codigo_articulo"), resultSet.getString("descripcion"),
+                             resultSet.getFloat("precio_venta"), Duration.ofSeconds(resultSet.getLong("tiempo_preparacion")),
+                             resultSet.getFloat("gastos_envio"));
+                 }
+             }
+        }catch (SQLException e) {
+			throw new DAOException("Error al obtener el articulo de la bd: ", e);
+		} finally {
+			if (statement != null) {
+				// Liberamos los recursos asignados al statement y a la conexión jdbc
+				statement.close();
+			}
+		}
+         
         return articulo;
     }
 
     @Override
-    public List<Articulo> obtenerTodosLosArticulos() throws SQLException {
-        List<Articulo> listaArticulos = new ArrayList<>();
-        String sql = "SELECT codigo, descripcion, pvp, tiempo_prep, gastos_envio FROM articulos";
-        try (PreparedStatement statement = conexion.prepareStatement(sql);
-                ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Articulo articulo = new Articulo(resultSet.getString("codigo"), resultSet.getString("descripcion"),
-                        resultSet.getFloat("pvp"), Duration.ofSeconds(resultSet.getLong("tiempo_prep")),
-                        resultSet.getFloat("gastos_envio"));
-                listaArticulos.add(articulo);
-            }
-        }
+    public ListaArticulos obtenerTodosLosArticulos() throws SQLException, DAOException {
+        ListaArticulos listaArticulos = new ListaArticulos();
+        PreparedStatement statement = null;
+        Articulo articulo = null;
+        
+        try {
+        	 String sql = "SELECT codigo_articulo, descripcion, precio_venta, gastos_envio, tiempo_preparacion FROM articulos";
+        	 statement = conn.prepareStatement(sql);
+             try (ResultSet resultSet = statement.executeQuery()) {
+            	 while (resultSet.next()) {
+            		 articulo = new Articulo(resultSet.getString("codigo_articulo"), resultSet.getString("descripcion"),
+                             resultSet.getFloat("precio_venta"), Duration.ofSeconds(resultSet.getLong("tiempo_preparacion")),
+                             resultSet.getFloat("gastos_envio"));
+                     listaArticulos.add(articulo);
+                 }
+             }
+        }catch (SQLException e) {
+			throw new DAOException("Error al obtener los articulos de la bd: ", e);
+		} finally {
+			if (statement != null) {
+				// Liberamos los recursos asignados al statement y a la conexión jdbc
+				statement.close();
+				this.close();
+			}
+		}
         return listaArticulos;
     }
 
-    @Override
-    public void actualizarArticulo(Articulo articulo) throws SQLException {
-        String sql = "UPDATE articulos SET descripcion=?, pvp=?, tiempo_prep=?, gastos_envio=? WHERE codigo=?";
-        try (PreparedStatement statement = conexion.prepareStatement(sql)) {
-            statement.setString(1, articulo.getDescripcion());
-            statement.setFloat(2, articulo.getPvp());
-            statement.setLong(3, articulo.getTiempoPrep().getSeconds());
-            statement.setFloat(4, articulo.getGastosEnvio());
-            statement.setString(5, articulo.getCodigo());
-            statement.executeUpdate();
-        }
-    }
-    
-    @Override
-    public void eliminarArticulo(Articulo articulo)throws SQLException {
-    	
-    	String sql_delete = "DELETE FROM articulos WHERE codigo = ?";
-    	PreparedStatement stmt = conexion.prepareStatement(sql_delete);
-        
-        try {
-
-            stmt.setString(1, articulo.getCodigo());
-            
-            int filasAfectadas = stmt.executeUpdate();
-            
-            if (filasAfectadas == 0) {
-                throw new SQLException("No se ha encontrado ningún artículo con el código " + articulo.getCodigo());
-            }
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (conexion != null) {
-            	conexion.close();
-            }
-        }
-    }
 }

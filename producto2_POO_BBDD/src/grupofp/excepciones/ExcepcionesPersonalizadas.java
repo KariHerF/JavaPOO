@@ -9,31 +9,31 @@ public class ExcepcionesPersonalizadas {
 	        super(message);
 	    }
     }
-	
+
 	public static class InvalidEmailFormatException extends Exception {
 		public InvalidEmailFormatException(String message) {
 	        super(message);
 	    }
     }
-	
+
 	public static class InvalidEmpyArgumentException extends Exception {
 		public InvalidEmpyArgumentException(String message) {
 	        super(message);
 	    }
     }
-	
+
 	public static class InvalidClientTypeException extends Exception {
 		public InvalidClientTypeException(String message) {
 	        super(message);
 	    }
     }
-	
+
 	public static class NotFloatException extends Exception {
 		public NotFloatException(String message) {
 	        super(message);
 	    }
-    }	
-	
+    }
+
 	public static class DAOException extends Exception {
 		public DAOException(String message, SQLException e) {
 	        super(message + e.toString());

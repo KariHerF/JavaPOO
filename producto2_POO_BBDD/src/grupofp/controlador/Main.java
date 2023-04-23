@@ -1,12 +1,12 @@
 package grupofp.controlador;
 
+import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import grupofp.controlador.Controlador;
-import grupofp.modelo.Articulo;
+import grupofp.excepciones.ExcepcionesPersonalizadas.DAOException;
 import grupofp.modelo.Datos;
 import grupofp.vista.GestionOS;
-import java.util.InputMismatchException;
 
 /**
  * @author J-Programers
@@ -37,7 +37,7 @@ public class Main {
 		misDatos.setControlador(miControlador);
 	}
 
-	private void MenuApp() {
+	private void MenuApp() throws SQLException, DAOException {
 		//Scanner sn = new Scanner(System.in);
 		boolean salir = false;
 		int opcion;
@@ -53,7 +53,7 @@ public class Main {
 			System.out.println("3. Gestion de Pedidos");
 			System.out.println("4. Cerrar aplicación");
 
-			try { 
+			try {
 				opcion = sn.nextInt();
 				boolean salir_submenu = false;
 				switch (opcion) {
@@ -118,7 +118,7 @@ public class Main {
 						System.out.println("2. Mostrar Clientes");
 						System.out.println("3. Mostrar Clientes Estándar");
 						System.out.println("4. Mostrar Clientes Premium");
-						System.out.println("5. Salir a menú principal");;
+						System.out.println("5. Salir a menú principal");
 					}
 					break;
 				case 3:
@@ -146,9 +146,11 @@ public class Main {
 							System.out.println("1. Motrar pedidos pendientes");
 							System.out.println("2. Mostrar pedidos pendientes por cliente");
 							System.out.println("3. Salir a menú anterior -  [GESTION DE PEDIDOS]");
-							Scanner sn_submenu_pedidos_mostrar_pendientes = new Scanner(System.in); // introducimos el teclado
+							//Scanner sn_submenu_pedidos_mostrar_pendientes = new Scanner(System.in); // introducimos el teclado
 							while (!salir_submenu_pedidos_mostrar_pendientes) {
+								Scanner sn_submenu_pedidos_mostrar_pendientes = new Scanner(System.in); // introducimos el teclado
 								opcion = sn_submenu_pedidos_mostrar_pendientes.nextInt();
+								//sn_submenu_pedidos_mostrar_pendientes.close();
 								switch (opcion) {
 								case 1:
 									miVistaGestionOS.mostrarPedidosPendientesVistaGestionOS();
@@ -174,9 +176,11 @@ public class Main {
 							System.out.println("1. Motrar pedidos enviados");
 							System.out.println("2. Mostrar pedidos enviados por cliente");
 							System.out.println("3. Salir a menú anterior -  [GESTION DE PEDIDOS]");
-							Scanner sn_submenu_pedidos_mostrar_enviados = new Scanner(System.in); // introducimos el teclado
+							//Scanner sn_submenu_pedidos_mostrar_enviados = new Scanner(System.in); // introducimos el teclado
 							while (!salir_submenu_pedidos_mostrar_enviados) {
+								Scanner sn_submenu_pedidos_mostrar_enviados = new Scanner(System.in); // introducimos el teclado
 								opcion = sn_submenu_pedidos_mostrar_enviados.nextInt();
+								//sn_submenu_pedidos_mostrar_enviados.close();
 								switch (opcion) {
 								case 1:
 									miVistaGestionOS.mostrarPedidosEnviadosVistaGestionOS();

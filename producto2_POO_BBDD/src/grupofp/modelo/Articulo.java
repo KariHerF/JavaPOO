@@ -14,7 +14,7 @@ public class Articulo {
     private float pvp;
     private Duration tiempoPrep;
     private float gastosEnvio;
-    
+
 	/**
 	 * @param codigo
 	 * @param descripcion
@@ -116,12 +116,10 @@ public class Articulo {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (getClass() != obj.getClass()))
 			return false;
 		Articulo other = (Articulo) obj;
 		return Objects.equals(codigo, other.codigo);
 	}
-    
+
 }

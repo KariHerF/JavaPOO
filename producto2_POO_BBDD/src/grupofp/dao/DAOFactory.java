@@ -10,14 +10,16 @@ public abstract class DAOFactory {
 	  // Habrá un método para cada DAO que se pueda crear
 	  // Las factorías concretas contendrán la implementación de cada DAO.
 	  public abstract ArticuloDAO obtenerArticuloDAO() throws SQLException;
+	  public abstract ClienteDAO obtenerClienteDAO() throws SQLException;
+	  public abstract PedidoDAO obtenerPedidoDAO() throws SQLException;
 
 	  public static DAOFactory getDAOFactory(
 	      int whichFactory) {
-	  
+
 	    switch (whichFactory) {
-	      case MYSQL: 
+	      case MYSQL:
 	          return new MySQLDAOFactory();
-	      default           : 
+	      default           :
 	          return null;
 	    }
 	  }
