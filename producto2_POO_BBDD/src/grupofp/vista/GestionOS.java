@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import grupofp.controlador.Controlador;
 import grupofp.excepciones.ExcepcionesPersonalizadas.DAOException;
+import grupofp.excepciones.ExcepcionesPersonalizadas.InvalidEmpyArgumentException;
 import grupofp.modelo.Articulo;
 import grupofp.modelo.Cliente;
 import grupofp.modelo.ClienteEstandar;
@@ -39,7 +40,7 @@ public class GestionOS {
 			float pvp_articulo;
 			String tiempoPrep_articulo;
 			Duration tiempoPrep_articulo_parsed;
-			float gastosEnvioArticulo;
+			float gastosEnvioArticulo = 0.0f;
 
 			System.out.println("Introducir código del artículo:");
 			Scanner sn_codigo_articulo = new Scanner(System.in);
@@ -64,12 +65,21 @@ public class GestionOS {
 					"(la duración del tiempo de preparación debe introducirse en formato ISO 8601 (PTnHnMnS))");
 			Scanner sn_tiempo_prep_articulo = new Scanner(System.in);
 			tiempoPrep_articulo = sn_tiempo_prep_articulo.nextLine();
+			// Validamos argumento no vacío
+			this.miControlador.getDatos().validarArgumentoNoVacio(tiempoPrep_articulo);
 			Duration duration = Duration.parse(tiempoPrep_articulo);
 			tiempoPrep_articulo_parsed = duration;
 
 			System.out.println("Introducir gastos envío del artículo:");
 			Scanner sn_gastos_envio_articulo = new Scanner(System.in);
-			gastosEnvioArticulo = sn_gastos_envio_articulo.nextFloat();
+			
+			// Validamos argumento float
+			if (sn_gastos_envio_articulo.hasNextFloat()) {
+				gastosEnvioArticulo = sn_gastos_envio_articulo.nextFloat();
+	            System.out.println("Los gastos de envío reconocidos para el artículo son: " + gastosEnvioArticulo);
+	        } else {
+	        	throw new IllegalArgumentException("Para este parámetro se espera la introducción de un valor decimal, el valor introducido no es un número decimal válido.");
+	        }
 
 			this.miControlador.crearArticulo(codigo_articulo, descripcion_articulo, pvp_articulo,
 					tiempoPrep_articulo_parsed, gastosEnvioArticulo);
